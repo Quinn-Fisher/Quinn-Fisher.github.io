@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimal Transport Research</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" type="image/png" href="LittleQ.png" />
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">About</a></h1>
+        <div class="dropdown">
+            <button class="dropbtn">Research</button>
+            <div class="dropdown-content">
+                <a href="mixup.html">Mixup Neural Collapse</a>
+                <a href="optimal_transport.html">Diffusion Network Optimal Transport</a>
+                <a href="opiate.html">Mathematical Modelling</a>
+                <a href="biostatistics.html">Statistical Modelling</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Other Work</button>
+            <div class="dropdown-content">
+                <a href="music.html">Music</a>
+                <a href="generative_audio.html">Generated Audio</a>
+            </div>
+        </div>
+        <h1><a href="Quinn_Fisher_Resume_2023.pdf" target="_blank">Resume</a></h1> <!-- Added Resume header with link to PDF -->
+    </header>
+    <main>
+        <h2>Optimal Transport in Diffusion Networks</h2>
+
+        <img class="right-floated-image" src="original_image1.png"  style="width: 200px; height: 200px;">
+        <img class="right-floated-image" src="encoding3.png" style="width: 200px; height: 200px;">
+        <!-- Add your Optimal Transport research content here -->
+        <p> The paper <em>Understanding DDPM Latent Codes Through Optimal Transport</em> by <a href="https://arxiv.org/abs/2202.07477" target="_blank">Khrulkov et al.</a> 
+            investigates the relationship between Denoising Diffusion Probabilistic Model (DDPM) encoding and optimal transport paths. Their findings are quite interesting
+            and although one of their main hypotheses has been disproved in the general case, it prompts some further experimentation. Just a note: when I refer to "encodings" here, Im talking about 
+            the noise that is used as an input for the generative model. The main goal here is to <strong> investigate whether or not there is evidence that the (reversible) mapping of a DDPM between noise and images
+            is an optimal transport</strong>. 
+        </p>
+
+
+        <h2>Background: score-based models, DDPMs, and encoder maps</h2>
+
+        <p>
+            Score-based image generation refers to models that utilize an energy-based model to generate
+            images. The key idea behind these methods is to learn a score function that assigns high
+            probabilities to the training data and low probabilities to the other regions in the data space.
+            By sampling from this distribution, we can generate images with characteristics similar to
+            those of the training data. Score-based methods have proven to be successful in generating
+            high-quality images with diverse and intricate structures.
+        </p>
+
+        <p>
+            DDPMs work by learning diffusion process. This process can be used to transform an initial
+            random noise sample into a realistic image by progressively denoising it. To train a DDPM,
+            a reverse diffusion process is applied to the training images, gradually corrupting them with
+            noise. The model then learns to reverse this process by predicting the denoising function at
+            each step. By optimizing the model using a carefully designed noise schedule, it becomes
+            capable of generating realistic images from random noise
+        </p>
+
+        <p>
+            The probability flow ODE is a method of deterministic sampling developed
+            by <a href="https://arxiv.org/abs/2101.09258" target="_blank">Song et al.</a> . This gives rise to a latent space and an encoder map from images
+            to Gaussian noise. The encoder map obtained from the probability flow ODE is the subject of investigation.
+        </p>
+
+
+        <h2>Experimentation</h2>
+
+        <h3>Metrics</h3>
+
+        <p>
+            The main inspiration for our experiments come from two measurements considered by <a href="https://arxiv.org/abs/2102.09235" target="_blank"> Gai et al.</a>. 
+            The <b>“Optimal Transport Score” (OTS)</b> and the <b>“Line Shape
+            Score” (LSS)</b> are used to quantify whether a map is close to optimal and how close a path
+            is to being linear. In the context of our experiments, the OTS between images and
+            their encodings are calculated, and the LSS of the paths that the image takes to its encoding
+            (via the probability flow ODE) is be calculated. If you dont wan't to read the full defitions, all you really need to 
+            know is the <b>OTS scores how well a mapping solves the assignment problem</b> and the <b>LSS measures how linear a path is</b>.
+        </p>
+
+        <h3> Optimal Transport Score </h3>
+
+        <p>
+            The OTS starts begins by considering a discretization of the optimal transport problem. Minimizing the 
+            sum of the individual costs can be framed as the following assignment problem for images \(x_i \in X\) and encodings \(y_i ∈ Y\)
+        </p>
+
+        <div>
+            \[
+            \begin{align*}
+            & \min _{c_{i j}} \sum_{i, j} c_{i j}\left\|x_i-\tilde{y}_j\right\|_2^2 \\
+            & \text { s.t. }\left\{\begin{array}{l}
+            \sum_{i=1}^m c_{i j}=1, j=1,2, \cdots, m \\
+            \sum_{j=1}^m c_{i j}=1, i=1,2, \cdots, m \\
+            c_{i j} \in\{0,1\}
+            \end{array}\right.
+            \end{align*}
+            \]
+        </div>
+
+        <p>
+            Then, for a given mapping from \(X \) to \(Y \), the OTS is defined below. Note that it is the ratio of the number of assignments that the mapping agrees with the
+            assignment problem solution, divided by the total number of assignments. Thus, OTS \(\leq\) 1 and when OTS = 1, the mapping solves the assignment problem.
+            $$\boxed{\mathrm{OTS}=\frac{\# \text { of correct assignments }}{m}}$$
+        </p>
+
+        <h3>Line Shape Score </h3>
+
+        <p>
+            For a set of points on a path \(x^{(0)}, \ldots, x^{(n)}\), we can define the line shape ratio as
+            $$\mathrm{LSR}=\frac{\sum_{l=0}^{n-1}\left\|x^{(l+1)}-x^{(l)}\right\|_2}{\left\|x^{(n)}-x^{(0)}\right\|_2}$$
+
+            which essentially measures how linear a path is. However, the LSR does not account for non-uniformly spaced points.
+            This is especially relevant in our case as the probability flow ODE is being solved with an adaptive step solver. 
+            We can fix this through normalization. First, normalize each segment
+            $$\tilde{x}^{(0)} = x^{(0)},\quad \tilde{x}^{(l)} = \tilde{x}^{(l- 1)} + \frac{x^{(l)} - x^{(l - 1)}}{\lVert x^{(l)} - x^{(l - 1)} \rVert_2}, \quad l = 1,\dots, n $$
+            Then, define the LSS as 
+            $$\boxed{\operatorname{LSS} = \frac{n}{\lVert \tilde{x}^{(n)} - \tilde{x}^{(0)} \rVert_2}}$$
+
+            Since the LSS is essentially comparing the length of the normalized tracks to the number of tracks, we have that \(\operatorname{LSS} \geq 1\) 
+            and when \(\operatorname{LSS} = 1\), the path from \(x^{(0)}\) to \(x^{(n)}\) is a straight line.
+        </p>
+
+
+
+
+        <h3>Experiment Setup</h3>
+
+        <p>
+            Our experiments use the framework provided by Song et al., including their checkpoints for a DDPM network trained 
+            on the CIFAR-10 dataset: the dataset which all of our experiments use. To solve the probability flow ODE we use the 
+            RK45 implementation by the scipy library. When we refer to the cost function in our experiments we are referring 
+            to the same one used in the papers we consider. That is, our cost function is the square of the \(L_2\)-norm. The Hungarian 
+            algorithm was used to solve any assignment problem solutions, again via the scipy library.
+        </p>
+
+        <h2>Results</h2>
+
+        <h3>Cost Array and OTS</h3>
+
+        <p>
+            For a subset of 500 images, the cost matrix is visualized below (left). The \(i,j\)th entry of this matrix is the cost of going from image 
+            \(i\) to encoding \(j\). Note that the streaks along the rows and columns of the first cost matrix motivates normalization so the 
+            \(L_2\)-norms of the encodings and images are more comparable. Once normalized, the cost (right) is clearly minimized along the diagonal.
+        </p>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="cost_array_500_trained.png" style="width: 500px;">
+            <img class="right-floated-image" src="cost_array_500_normalized_trained.png" style="width: 500px;">
+        </div>
+
+        <p>
+            For each subset of images considered, <b>OTS = 1</b> was the result regardless of subset size or normalization. 
+            This means that for each subset of images, the encoding map solved the assignment problem. This result provides evidence of 
+            the encoder map for CIFAR-10 being an optimal transport.
+        </p>
+
+        <h3>LSS of Encoding Paths</h3>
+
+        <p>
+            Using the line shape score (LSS), we can obtain a value for the linearity of the path that each image takes to its encoding. The 
+            histogram before shows the LSS for a subset of 250 CIFAR-10 image paths. Note that each value is close to 1, indicating that 
+            the paths are quite linear. This result also motivates visualization of the paths.
+        </p>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="LSS_258.png" style="width: 500px;">
+        </div>
+
+        <h3>Path Visualization</h3>
+
+        <p>
+            To visualize the paths taken from image to encoding, dimensionality reduction methods can be used on the solution to the 
+            probability flow ODE. For each of the methods listed below, the paths from 250 images to their respective 
+            encodings were embedded into two dimensions using each method and plotted. Two of the methods, namely t-sne and isomap, are considered manifold learning methods.
+        </p>
+
+        <ul>
+            <li> <b>t-distributed Stochastic Neighbor Embedding (t-SNE)</b>. Nonlinear dimensionality reduction method that preserves local structure.</li>
+            
+            <li><b>Isomap</b>. Nonlinear dimensionality reduction method that preserves geodesic distance.</li>
+            
+            <li> <b>Principal component analysis} (PCA)</b>. Linear dimensionality reduction method.</li>
+        </ul>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="tsne_250_class.png" style="width: 330px;">
+            <img class="right-floated-image" src="isomap_250_class.png" style="width: 330px;">
+            <img class="right-floated-image" src="pca_250_class.png" style="width: 330px;">
+        </div>
+
+        <p>
+            Typically, t-SNE is good at clustering images based on class for datasets such as MNIST and CIFAR-10. However, in our case no such clusters appear.  
+            The paths from image to encoding appear as short curves arranged tightly in a round overall shape. 
+            This un-clustered result is likely due to the fact that the intermediate images along the paths are causing issues with the manifold learning process for t-SNE. 
+            The images that have varying levels of noise are potentially interfering with the process that usually clusters results by class potentially due to the fact that 
+            towards the end of the path they are similar to each other. If the images are starting in different classes and moving towards a common distribution, 
+            t-SNE would have a hard time maximizing the distance between clusters.
+        </p>
+        <p>
+            The isomap and PCA plots yield very similar results to each other. In both cases, the starting point of the path is dispersed in the space and as the image 
+            travels along the path towards its encoding, it travels in a straight line approximately towards the origin. This intuitively makes sense as the distribution 
+            of images would be much more spread out than the distribution of encodings, which specifically in terms of \(L_2\)-norms would be located towards the origin. 
+            The individual points in the shape of an arc across the top of the isomap plot are quite intriguing and we have not been able to hypothesize a reason for 
+            them other than perhaps they are moving in the third dimension, out of or into the page. Nonetheless, the linearity of the paths in both the isomap embedding and PCA are clear.
+        </p>
+
+
+        <h3>Untrained Networks</h3>
+
+        <p>
+            Here we provide a somewhat interesting results that demonstrates why evaluating the OTS throughout training would not necessarily be useful. Below, we repeated the experiments 
+            from the previous section without training the network. In all of the experiments, the result still yielded <b>OTS = 1</b>. That is to say, the ODE mapping was still solving the 
+            assignment problem. The important thing to note here is that in this case, the encodings are not gaussian noise and are more or less meaningless.
+            The main point of this experiment is to show that throughout training, it is likely that the OTS remains 1.
+        </p>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="cost_array_500_untrained.png" style="width: 500px;">
+            <img class="right-floated-image" src="cost_array_500_untrained_normalized.png" style="width: 500px;">
+        </div>
+
+        <h2>Future Research and Concluding Remarks</h2>
+
+        <p>
+            Aside from the obvious alteration of using different datasets, our experiments could potentially extended by examining the measurements during the training process. 
+            Due to computational limitations, our experiments used pre-trained checkpoints, but if a network was being trained on a dataset, it would be interesting to visualize 
+            the paths as well as calculate the LSS for a subset of images throughout the training process. If the average LSS approached 1 as training progressed, this would be 
+            good evidence that the encoding is approaching an optimal transport.
+        </p>
+
+
+
+    </main>
+    <!-- Social media icons section -->
+    <div class="social-icons">
+        <div class="linkedin-icon"><a href="https://www.linkedin.com/in/quinn-fisher/" target="_blank"><img src="linkedin_logo.png" alt="LinkedIn"></a></div>
+        <div class="email-icon"><a href="mailto:quinnleblancfisher@gmail.com" target="_blank"><img src="email_logo.png" alt="Email"></a></div>
+        <!-- Add more social icons as needed -->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

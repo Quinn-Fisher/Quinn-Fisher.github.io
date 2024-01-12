@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Modelling</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" type="image/png" href="LittleQ.png" />
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">About</a></h1>
+        <div class="dropdown">
+            <button class="dropbtn">Research</button>
+            <div class="dropdown-content">
+                <a href="mixup.html">Mixup Neural Collapse</a>
+                <a href="optimal_transport.html">Diffusion Network Optimal Transport</a>
+                <a href="opiate.html">Mathematical Modelling</a>
+                <a href="biostatistics.html">Statistical Modelling</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Other Work</button>
+            <div class="dropdown-content">
+                <a href="music.html">Music</a>
+                <a href="generative_audio.html">Generated Audio</a>
+            </div>
+        </div>
+        <h1><a href="Quinn_Fisher_Resume_2023.pdf" target="_blank">Resume</a></h1> <!-- Added Resume header with link to PDF -->
+    </header>
+    <main>
+        <h2>Modelling Opioid Epidemic</h2>
+
+        <p>
+            During my undergraduate degree, I worked on a research project supervised by Professor Adam Stinchcombe in which 
+            we attempted to model the rise in opiate addictions during the beginning of the COVID-19 pandemic in spring of 2020. 
+            The project was building on the work of <a href="https://arxiv.org/pdf/1711.03658.pdf" target="_blank">Battista et al.</a> 
+            where a compartment model for opiate addiction is presented. Essentially, we are using a system of differential equations to describe 
+            the movement of people between various compartments. 
+        </p>
+
+        <h3>The Model</h3>
+        <p>
+            Below is a diagram of the compartment model we used. The copmartments are defined as follows
+        </p>
+
+        <ul>
+            <li> <b>S</b> - The susceptible population who are neither using opioids nor recovering from opioid dependence. </li>
+            <li> <b>P</b> - The proportion of individuals who are using prescription opioids, but who have not developed an addiction.</li>
+            <li> <b>A</b> - The proportion of the population exhibiting opioid dependence or opioid use disorder (prescription and/or illicit).</li>
+            <li> <b>R</b> - The proportion of the population that is currently being treated for their opioid addiction.</li>
+        </ul>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="opiate_compartment_model.png" style="width: 700px;">
+        </div>
+
+        The table below outlines each of the parameters in the compartment model. We can then model the problem in python using ODE solvers.
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tr>
+              <td>\(\alpha\)</td>
+              <td>Prescription rate</td>
+            </tr>
+            <tr>
+              <td>\(\epsilon\)</td>
+              <td>Rate of ending prescription without addiction</td>
+            </tr>
+            <tr>
+                <td>\( \beta_P \)</td>
+                <td> Illicit addiction rate based on interactions with P</td>
+            </tr>
+            <tr>
+                <td>\( \beta_A \)</td>
+                <td> Illicit addiction rate based on interactions with A</td>
+            </tr>
+            <tr>
+                <td>\( \gamma \)</td>
+                <td> Prescription-induced addiction rate </td>
+            </tr>
+            <tr>
+                <td>\( \zeta \)</td>
+                <td> Rate of entry into rehabilitation program(s) from A </td>
+            </tr>
+            <tr>
+                <td>\( \delta \)</td>
+                <td> Successful treatment rate for R </td>
+            </tr>
+            <tr>
+                <td>\( \sigma \)</td>
+                <td> Relapse rate from R to A </td>
+            </tr>
+            <tr>
+                <td>\( \mu \)</td>
+                <td> Death rate (S, P, R) </td>
+            </tr>
+            <tr>
+                <td>\( \mu^* \)</td>
+                <td> Death rate of addicted (A) </td>
+            </tr>
+
+          </table>
+
+          <h3>Time Dependent Parameters</h3>
+
+          <p>
+            The work of <a href="https://arxiv.org/pdf/1711.03658.pdf" target="_blank">Battista et al.</a> 
+            operates under the assumption that all parameters remain constant. Inspired by the increase in adduction 
+            rates of spring 2020, we introduce time dependent parameters for the model. Specifically, we are focused on 
+            the time dependence of the addiction parameters \(\gamma,\, \beta_P\), and \(\beta_A\), as well as the prescription 
+            rate \(\alpha\). The reason for focusing on these parameters specifically is due to the prescription rate generally being in 
+            the control of healthcare system, and the fact that addiction rates have clearly changed with time.
+          </p>
+
+
+          <h3> Addiction "Outbreaks"</h3>
+
+          <p>
+            For the remainder of this writup, I'll be quite brief in my explanations. This project had to stop 
+            unexpectedly due to some health issues of a team member. By the time those issues were resolved, most of the team members (myself included) 
+            were off doing other things. If you've read this far, chances are you're somewhat interested 
+            in the project. If thats the case, and you're finding that my explanations aren't sufficient or you want to know more, you 
+            should definitely reach out to me! I'd love to discuss.
+          </p>
+
+          <p>
+            After implementing the changes to the model, we aimed to simulate the rapid rise in addiction that was seen at the beginning of the 
+            COVID-19 pandemic. In reality, the rise in addiction rates has been present since long before COVID-19. As an initial proof of concept, 
+            we first implemented a rise in all addiction parameters. That is, all parameter rates going into the addicted compartment. Mathematically, 
+            this is described by a new parameter \( \kappa \). For a given addiction rate \(\beta\) with an "outbreak" start time of \(t_\text{start}\) 
+            and end time of \(t_\text{end}\), the rate at a given time, \(a(t) \), can be written as
+          </p>
+
+        <div>
+            \[
+            a(t)= \begin{cases}\beta & 0 \leq t \leq t_{\text{start}} \\ \beta+\frac{\beta(\kappa-1)\left(t-t_{\text{start }}\right)}{l_{\text{increase }}} & t_{\text{start}} \leq t \leq t_{\text{start}}+l_{\text{increase}} \\ \kappa \beta & t_{\text{start }}+l_{\text{increase}} \leq t \leq t_{\text{end }}-l_{\text{decrease }} \\ \kappa \beta+\frac{\beta(1-\kappa)\left(t-t_{\text{end}}+l_{\text{decrease}}\right)}{l_{\text{decrease}}} & t_{\text{end}}-l_{\text{decrease}} \leq t \leq t_{\text{end}} \\ \beta & t_{\text{end}} \leq t\end{cases}
+            \]
+        </div>
+
+        <p>
+            Essentially, there is a baseline addition rate \(\beta\) which then linearly increases until it reaches \(\kappa \beta\). After the outbreak ends, it linearly 
+            decreases to the original rate. When implementing these addiction "outbreaks", define the parameters \(\gamma,\, \beta_P \), and \(\beta_A\) in the above manner.
+        </p>
+
+
+        <h3>Prescription "Lockdowns"</h3>
+
+        <p>
+            To manage the addiction outbreaks above, we tried to think of what a public health unit could immedietly do. As an initial experiment, we 
+            decided to see how a prescription "lockdown" would affect such a scenario. That is, the lowering of the optiate prescription rate in response 
+            to a rapid rise in opiate addiction. <b>Its important to note that this experiment a closed system that is strictly looking at numbers in a simulation. The social 
+            effects of any of our experiments would have to be deeply considered before anything was put into actual use and its likely that there would be a large number 
+            of consequences that this model cannot encapsulate. The opiate epidemic has changed a lot since its beginnings and the humanity of those involved must always be considered </b>. With that being said, we introduce a new parameter, \(\lambda\), which dictates the severity of the prescription lockdown. 
+            For a given prescription rate, \(\alpha\), lockdown start time of \(t_\text{start}\) and end time of \(t_\text{end}\), the rate at a given time, \(p(t) \), can be written as
+        </p>
+
+        <div>
+            \[
+            p(t)= \begin{cases}\alpha & 0 \leq t &lt; t_{\text {start }} \\ \lambda \alpha & t_{\text {start }} \leq t \leq t_{\text {end }} \\ \alpha & t_{\text {end }}&lt;t\end{cases}
+            \]
+        </div>
+
+        <p> In other words, the prescription rate goes from \(\alpha\) to \(\lambda \alpha\) during a lockdown.</p>
+
+
+    <h3>Simulations</h3>
+    
+        <p>
+            To give you an idea of how the system behaves, here we present some simulations. Below are two scenarios. 
+            <b>Left:</b> Proportion of population addicted during addiction outbreaks of various levels from \(t = 1 \) to \(t = 2\).
+             <b>Right: </b> Proportion of population addicted during prescription lockdowns of various levels from \(t = 1 \) to \(t = 2\).
+        </p>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="opiate_addiction_outbreak.png" style="width: 500px;">
+            <img class="right-floated-image" src="opiate_prescription_lockdown.png" style="width: 500px;">
+        </div>
+
+        <p>
+            We can also bring together both scenarios above to yield addiction outbreaks with \(\kappa = 3\) from time \(t = 1\) to \(t = 2\), with various 
+            prescription lockdown levels. That result is plotted below. In an effort to be somewhat realistic, we start the lockdown 2 months after the outbreak. 
+            Note that the scenario of a full lockdown ( \( \lambda = 0\)) achieves almost the same result post-outbreak as no outbreak at all.
+        </p>
+        
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="opiate_outbreak_lockdown.png" style="width: 600px;">
+        </div>
+
+    
+    <h3> Evaluating the Results</h3>
+
+        <p>
+            In order to get meaningful information about the cumulative amount of addiction occurring over a period of time, we need to work with a unit 
+            that better suits the scenario. Since \(A(t)\) is the proportion of the population addicted to opiates at time $t$, if we set up an additional 
+            compartment for cumulative addiction which we will call \(AC(t)\), we can write its derivative as
+            $$\frac{d AC(t)}{dt} = A, \qquad AC(t_0) = 0 $$
+            where \(t_0\) is the initial desired time value (in our case, \(t_0 = 0\)). Then, since all of our parameters/units are annual, solving for 
+            \(AC(t)\) will give us the total number of ``Addiction Years" per person gained over the given time interval \([t_0, t]\). We opt to use the 
+            per person value as to not make any assumptions about population size - this could easily be changed by multiplying values by population size. 
+            The fact that \(AC(0) = 0\) is what makes this value the net value of addiction years gained - a value that will be useful for analyzing outbreak 
+            response effectiveness. Note that 1 Addiction Year is the equivalent of 1 full year of time addicted distributed among a given population, i.e. 
+            1 person addicted for 1 year, 2 people addicted for 0.5 years, 1 person addicted for 0.5 years plus 2 people addicted for 0.25 years, and so on. 
+            This unit's focus is on how much addiction there is, not necessarily how it is distributed.
+        </p>
+
+        <p> 
+            The picture below is the same scenario as the previous plot, but instead we plot addiction years per person. Though the improvement looks quite smalle, 
+            it is important to remember that relvative to the units, it is quite an improbement. For example, in a population of 1 million, an improvement in 0.003 
+            addiction years per person is a cumulative savings of 3000 addiction years.
+
+        </p>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="opiate_outbreak_lockdown_addiction_years.png" style="width: 600px;">
+        </div>
+
+    <h3> Optimizing Lockdowns </h3>
+
+        <p>
+            To get a sence for the optimal lockdown scenario, we can create a 2D plot of the amount of addiction years saved 
+            for various lockdown start times and lockdown lengths. The project considered many scenarios, one of which is plotted below for an outbreak starting at \(t=0\). 
+            The colour indicates the number of addiction years per person gained by the "outbreak", thus lower is better. The white, red, and 
+            magenta lines represent 75%, 50%, and 25% of the optimal "lockdown". Perhaps unsurprisingly, the optimal lockdown is enacted as soon as possible 
+            and is as strict as possible. This result remained constant throughout all of the simulations.
+
+
+        </p>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="opiate_optimal_lockdown.png" style="width: 600px;">
+        </div>
+
+        <p>
+            Below are a couple of plots showing the effects of the optimal lockdown as a response to various oubreak scenarios. The longer and larger 
+            the outbreak, the more addiction years are saved by the optimal lockdown. These results, at face value, are sort of a sanity check, but the system itself 
+            is still quite interesting.
+        </p>
+
+        <div style="display: flex; justify-content: center;">
+            <img class="right-floated-image" src="opiate_saved_addiction_years.jpeg" style="width: 500px;">
+            <img class="right-floated-image" src="opiate_saved_addiction_years_per_person.jpeg" style="width: 500px;">
+        </div>
+
+    <h3>Fitting the Model to Data</h3>
+        <p> 
+            The next step in the project was to fit it to publically available health data. UNfortunately this portion of the project coincides with 
+            the afformentioned health issues that halted the project. We were able to find some useful data from the Ontario government, though in general 
+            the accecible data was quite poor. The main goal of this section was to use simmulated annealing to fit the model to data to assess what kind of "outbreak" 
+            happened in spring of 2020, and then use the simulated lockdown to see how that could have potentially mitigated the rise in addiction and death. Again, stressing that 
+            opiate addiction and public healthcare are extremely complicated and this simple idea of a prescription lockdown is certainly not sufficient and potentially not justified in a real 
+            world scenario. 
+        </p>
+
+
+    </main>
+    <!-- Social media icons section -->
+    <div class="social-icons">
+        <div class="linkedin-icon"><a href="https://www.linkedin.com/in/quinn-fisher/" target="_blank"><img src="linkedin_logo.png" alt="LinkedIn"></a></div>
+        <div class="email-icon"><a href="mailto:quinnleblancfisher@gmail.com" target="_blank"><img src="email_logo.png" alt="Email"></a></div>
+        <!-- Add more social icons as needed -->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

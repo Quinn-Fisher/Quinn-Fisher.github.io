@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Audio Research</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" type="image/png" href="LittleQ.png" />
+    <!-- Other head elements... -->
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">About</a></h1>
+        <div class="dropdown">
+            <button class="dropbtn">Research</button>
+            <div class="dropdown-content">
+                <a href="mixup.html">Mixup Neural Collapse</a>
+                <a href="optimal_transport.html">Diffusion Network Optimal Transport</a>
+                <a href="opiate.html">Mathematical Modelling</a>
+                <a href="biostatistics.html">Statistical Modelling</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Other Work</button>
+            <div class="dropdown-content">
+                <a href="music.html">Music</a>
+                <a href="generative_audio.html">Generated Audio</a>
+            </div>
+        </div>
+        <h1><a href="Quinn_Fisher_Resume_2023.pdf" target="_blank">Resume</a></h1> <!-- Added Resume header with link to PDF -->
+    </header>
+    <main>
+        <h2>Generated Audio</h2>
+        <!-- Add your Generative Audio research content here -->
+
+        <p>
+            This is really a work in progress and more exploratory than my other work. I like to mess around with audio and music, 
+            so I figured this would be a fun investigation. The goal of this section is to investigate two things:
+        </p>
+
+        <ol>
+            <li> How can I generate interesting music using diffusion networks</li>
+            <li> How can I manipulate "encodings" to get interesting sounding generated audio that shares characteristics of the source audio. In other words, 
+                what is an effective way to traverse the latent space.
+            </li>
+        </ol>
+        
+
+        <p> 
+            
+            Once I implemented the great work done by <a href="https://github.com/teticio/audio-diffusion" target="_blank"> Robert Smith</a>, my
+            first thought was to mess around with the encodings (inupts to the network) using convex combinations. This is mostly due
+            to my research with mixup showing that when you use convex combinations inputs in deep networks, interesting and somewhat
+            undexpected behaviours occur. Below is an example of me first generating two encodings, \(E_1\) and \(E_1\). I then take convex combinations
+            of the encodings, \( \lambda E_1 + (1 - \lambda)E_2 \) and vary \(\lambda\) from 0 to 1. I use each of these convex combinations as inputs
+            for the network and stitch together the generated audio, yielding the "music" below. 
+        
+        </p>
+
+        <audio controls>
+            <source src="messing_with_latents.wav" type="audio/mp3">
+            Your browser does not support the audio tag.
+        </audio>
+
+        <p>
+            Sounds great, right? Ok... maybe in an avant-garde way, but I think it sounds pretty cool. This method for navigating the latent space isnt very sophisticated,
+            so maybe we should try something more motivated.
+        </p>
+
+    </main>
+    <!-- Social media icons section -->
+    <div class="social-icons">
+        <div class="linkedin-icon"><a href="https://www.linkedin.com/in/quinn-fisher/" target="_blank"><img src="linkedin_logo.png" alt="LinkedIn"></a></div>
+        <div class="email-icon"><a href="mailto:quinnleblancfisher@gmail.com" target="_blank"><img src="email_logo.png" alt="Email"></a></div>
+        <!-- Add more social icons as needed -->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

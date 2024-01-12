@@ -1,0 +1,133 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixup Research</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" type="image/png" href="LittleQ.png" />
+    <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">About</a></h1>
+        <div class="dropdown">
+            <button class="dropbtn">Research</button>
+            <div class="dropdown-content">
+                <a href="mixup.html">Mixup Neural Collapse</a>
+                <a href="optimal_transport.html">Diffusion Network Optimal Transport</a>
+                <a href="opiate.html">Mathematical Modelling</a>
+                <a href="biostatistics.html">Statistical Modelling</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Other Work</button>
+            <div class="dropdown-content">
+                <a href="music.html">Music</a>
+                <a href="generative_audio.html">Generated Audio</a>
+            </div>
+        </div>
+        <h1><a href="Quinn_Fisher_Resume_2023.pdf" target="_blank">Resume</a></h1>
+    </header>
+    <main>
+        <h2>Mixup's Influence on Neural Collapse</h2>
+        
+        <p> 
+            This page is a quick explanation for a research project/paper titled
+        </p>
+
+        <p> <center><i><a href="https://openreview.net/pdf?id=jTSKkcbEsj" target="_blank">Pushing Boundaries: Mixup's Influence on Neural Collapse</a></i></center></p>
+            
+        <p>
+            My research on last-layer activations of deep networks is heavily influenced by (my supervisor) Vardan Papyan's work on <a href="https://arxiv.org/abs/2008.08186" target="_blank">Neural Collapse</a>.     
+        </p>
+
+        <h2>Mixup</h2>
+
+        <p>
+            Mixup (<a href="https://arxiv.org/abs/1710.09412" target="_blank">Zhang et al.</a>) is a popular data augmentation method that generates new training 
+            examples through convex combinations of existing data points and labels. For each mini-batch, a mixup rate \( \lambda \in [0, 1]\) is randomly generated
+            and used as a coefficient for the convex combination of data points and labels. Check out an example below with two examples from the CIFAR10 dataset! 
+            Note that as the image changes, so does the label.
+            Using mixup to train deep networks has been shown to improve generalization and calibration, but the underlying mechanisms of what it does is still somewhat
+            of a mystery. 
+        </p>
+
+        <div class="image-row">
+            <div class="image-container">
+                <p>Original Image 1</p>
+                <img src="original_image2.png" alt="Original Image 1" class="original-image">
+                <p class="image-label">Label = [1, 0]</p>
+            </div>
+            <div class="image-container">
+                <p>Original Image 2</p>
+                <img src="original_image3.png" alt="Original Image 2" class="original-image">
+                <p class="image-label">Label = [0, 1]</p>
+            </div>
+            <div class="image-container canvas-container">
+                <p>Mixup Image</p>
+                <canvas id="blendedCanvas" width="500" height="530"></canvas>
+                <p class="image-label" id="blendedLabel">Label = [0.50, 0.50]</p>
+            </div>
+        </div>
+        <label id="opacityLabel">λ = 0.50</label>
+        <input type="range" id="blendSlider" class="custom-slider" min="0" max="100" value="50">
+
+        <h2> Neural Collapse</h2>
+        <img class="right-floated-image" src="neural_collapse_animation.gif" alt="Description of the image"  style="width: 400px; height: 400px;">
+        <p>Neural Collapse is an inductive bias in which the last-layer activations and classifiers 
+            of the network converge to the geometric configuration of a simplex equiangular tight frame (ETF). 
+            This phenomenon reflects the natural tendency of the networks to organize the representations of different classes such that each class’s 
+            representations and classifiers become aligned, equinorm, and equiangularly spaced, providing optimal separation in the feature space. Check
+            out the animation made using Vardan's "expert hollywood VFX abilities". It shows a subset of three classes during training. The green
+            spheres represent the simplex ETF structure, red ball-and-sticks represent
+            linear classifiers, blue ball-and-sticks represent class-means, and small blue spheres
+            represent last-layer features.
+        </p>
+
+        <h2> Mixup's Influence on Neural Collapse</h2>
+
+        <p>
+            The observed phenomenon of Neural Collapse provides a compelling motivation to explore whether mixup induces alternative geometric configurations and whether those could explain its success.
+            The first part of this project is an extensive empirical study focusing on the last-layer activations of mixup training data (convex combinations of images and targets). 
+            The results of this empirical study is that the last-layer activations for mixup training data converge to a specific and unexpeced configuration across various dataset and architecture combinations. 
+            Notably, the mixup last-layer activations are not convex comvinations of regular last-layer activations. Instead, activations from mixed-up examples of identical classes align with the classifier, 
+            while those from different classes delineate channels along the decision boundary. The plot below has examples of the configuration for a subset of 3 classes! Points mixed-up with the same class are coloured using the red-yellow scale,
+            points mixed-up with a different class are coloured using the blue-green scale, and the respective classifier is plotted in black. You can find more details of the figures in the paper mentioned at the top of the page.
+
+            
+
+        </p>
+        <img class="center" src="last_layer_activations.png" alt="Description of the image"  style="width: 800px;">
+
+        <h2>Calibration, Unconstrained Features Model, and More </h2>
+
+        <p>
+            In addition to discovering the phenomena of last-layer activations of mixup training data collapsing, 
+            the project uses the configuration to explain the benefits mixup has on calibration (softmax probabilities being 
+            in alignment with true probabilities). In short, we argue that the confidence is being encouraged to align with \(\lambda\), 
+            and as the confidence is minimized, features go towards the channels making it more likely for them to fall on the incorrect side of the decision boundary. Thus the true 
+            probability is also minimized. Theres a great explanation and diagram in the paper.
+        </p>
+
+        <p>
+            The paper also examines the concept of an unconstrained features model. The idea is basically that modern deep networks 
+            have so many parameters, they can essentially map images to any feature. Thus the technique focuses on optimizing over the 
+            last-layer activations to see if there are any theoretically desirable configurations. 
+        </p>
+        <script src="script.js"></script>
+    </main>
+
+    <!-- Social media icons section -->
+    <div class="social-icons">
+        <div class="linkedin-icon"><a href="https://www.linkedin.com/in/quinn-fisher/" target="_blank"><img src="linkedin_logo.png" alt="LinkedIn"></a></div>
+        <div class="email-icon"><a href="mailto:quinnleblancfisher@gmail.com" target="_blank"><img src="email_logo.png" alt="Email"></a></div>
+        <!-- Add more social icons as needed -->
+    </div>
+
+</body>
+</html>

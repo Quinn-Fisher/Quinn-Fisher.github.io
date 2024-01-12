@@ -1,0 +1,266 @@
+/* General styling */
+body {
+    background-color: #e1dfd7;
+    font-family: 'Verdana', sans-serif;
+    margin: 50px;
+    font-size: 16px;
+}
+
+/* Header styling */
+header {
+    background-color: #2d333e;
+    padding: 0.5em;
+    text-align: center;
+    margin-right: -50px;
+    margin-left: -50px;
+    margin-top: -50px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+    font-family: 'Verdana', sans-serif; /* Updated font family for headers */
+}
+
+h1 {
+    display: inline-block;
+    padding: 0 20px;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: bold;
+    position: relative;
+}
+
+h1:hover::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #2d333e;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+h2 {
+    font-size: 33px;
+}
+
+h3 {
+    font-size: 25px;
+}
+
+h4 {
+    font-size: 50px;
+}
+
+
+
+/* Header link styling */
+header a {
+    text-decoration: none;
+    color: #ffffff;
+    padding: 10px 16px;
+    font-size: 28px;
+    font-family: 'Verdana', sans-serif; /* Updated font family for header links */
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+header a:hover {
+    background-color: #1a1a1a; /* Adjusted color for hover state */
+}
+
+/* Dropdown styling */
+.dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+.dropbtn {
+    background-color: #2d333e;
+    color: #ffffff;
+    padding: 10px 16px;
+    font-size: 28px;
+    font-family: 'Verdana', sans-serif; /* Updated font family for dropdown button */
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown:hover .dropbtn,
+.dropdown-content a:hover {
+    background-color: #1a1a1a; /* Adjusted color for hover state */
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #e9e8e5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    width: 100%;
+}
+
+.dropdown-content a {
+    color: #333333;
+    padding: 8px 14px;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    font-family: 'Verdana', sans-serif;
+    white-space: normal;
+}
+
+/* ... Existing styles ... */
+
+.dropdown-content a:hover {
+    background-color: #bebbaf;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Social icons styling */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* Adjusted margin for linkedin icons */
+    margin-bottom: 0px
+}
+
+.linkedin-icon {
+    margin-right: 20px;
+}
+
+.linkedin-icon img {
+    width: 35px;
+    height: auto;
+}
+
+.linkedin-icon:hover img {
+    filter: brightness(150%) contrast(50%);
+}
+
+
+.email-icon {
+    margin-right: 20px;
+}
+
+.email-icon img {
+    width: 60px;
+    height: auto;
+    filter: brightness(190%) hue-rotate(210deg);
+}
+
+.email-icon:hover img {
+    filter: brightness(340%) hue-rotate(210deg) contrast(50%);
+}
+
+
+/* Main content styling */
+main {
+    padding: 20px;
+    color: #555555;
+    font-family: 'Verdana', sans-serif;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.right-floated-image {
+    float: right;
+    margin: -5px 5px 5px 15px;
+}
+main::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.image-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.image-container {
+    text-align: center;
+    width: 200px;
+    margin-bottom: 20px;
+}
+
+.original-image,
+canvas {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+}
+
+.image-container p {
+    margin-bottom: 5px;
+}
+
+canvas {
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+}
+
+.lambda-label {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.neural-collapse-image {
+    max-width: 180%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f5f5f5;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
