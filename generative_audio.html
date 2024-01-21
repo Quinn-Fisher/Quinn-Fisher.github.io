@@ -52,9 +52,9 @@
         <p> 
             
             Once I implemented the great work done by <a href="https://github.com/teticio/audio-diffusion" target="_blank"> Robert Smith</a>, my
-            first thought was to mess around with the encodings (inupts to the network) using convex combinations. This is mostly due
+            first thought was to mess around with the encodings (inputs to the network) using convex combinations. This is mostly due
             to my research with mixup showing that when you use convex combinations inputs in deep networks, interesting and somewhat
-            undexpected behaviours occur. Below is an example of me first generating two encodings, \(E_1\) and \(E_1\). I then take convex combinations
+            unexpected behaviours occur. Below is an example of me first generating two encodings, \(E_1\) and \(E_1\). I then take convex combinations
             of the encodings, \( \lambda E_1 + (1 - \lambda)E_2 \) and vary \(\lambda\) from 0 to 1. I use each of these convex combinations as inputs
             for the network and stitch together the generated audio, yielding the "music" below. 
         
