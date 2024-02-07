@@ -185,6 +185,7 @@ main {
 
 .right-floated-image {
     float: right;
+    max-width: 100%;
     margin: 10px 10px 10px 10px;
 }
 main::after {
