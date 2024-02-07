@@ -183,6 +183,8 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+
+
 .right-floated-image {
     float: right;
     max-width: 100%;
@@ -264,4 +266,37 @@ th {
 
 tr:hover {
     background-color: #f9f9f9;
+}
+
+
+
+/* Add this media query for better responsiveness on smaller screens */
+@media screen and (max-width: 800px) {
+    .right-floated-image {
+        float: none;
+        max-width: 100%;
+        margin: 10px auto;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    .image-container {
+        width: 100%;
+        margin: 0 auto 20px;
+    }
+
+    .neural-collapse-image {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Add styles for the last-layer activations image on smaller screens */
+    .center img.last-layer-activations {
+        width: 100%; /* Adjust the width based on your design */
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
 }
